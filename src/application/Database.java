@@ -37,7 +37,7 @@ public class Database {
 		connect = connectDB();
 //		
 		//testing fetch data from the database
-		String sql = "select * from users";
+		String sql = "select distinct building from allrooms where bookable_flag=1";
 		
 		prepare = connect.prepareStatement(sql);
 		result = prepare.executeQuery();
@@ -46,15 +46,13 @@ public class Database {
 
 	    while (result.next()) {
 	        isEmpty = false;
-	        int userId = result.getInt("userid");
-	        String username = result.getString("username");
-	        String password = result.getString("password");
+	        String b = result.getString("building");
 
-	        System.out.println("UserID: " + userId + ", Username: " + username + ", Password: " + password);
+	        System.out.println("Building Name: " + b );
 	    }
 
 	    if (isEmpty) {
-	        System.out.println("empty table users");
+	        System.out.println("empty table");
 	    }
 		return null;
 	}
