@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
@@ -49,11 +53,102 @@
                                     <FontAwesomeIconView fill="WHITE" glyphName="CLIPBOARD" size="1.5em" />
                                  </graphic>
                               </Button>
+                              <Button layoutX="10.0" layoutY="506.0" mnemonicParsing="false" styleClass="logout" stylesheets="@dashboardDesign.css" textFill="WHITE">
+                                 <graphic>
+                                    <FontAwesomeIconView fill="WHITE" glyphName="SIGN_OUT" selectionFill="BLACK" size="2em">
+                                       <styleClass>
+                                          <String fx:value="logout" />
+                                          <String fx:value="shadow" />
+                                       </styleClass></FontAwesomeIconView>
+                                 </graphic>
+                              </Button>
+                              <Label layoutX="59.0" layoutY="514.0" text="Sign Out" textFill="WHITE">
+                                 <font>
+                                    <Font name="Tahoma" size="15.0" />
+                                 </font>
+                              </Label>
                            </children>
                         </AnchorPane>
                      </children>
                   </AnchorPane>
                </left>
+               <center>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <AnchorPane layoutX="101.0" layoutY="140.0" prefHeight="555.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <AnchorPane layoutX="14.0" layoutY="12.0" prefHeight="532.0" prefWidth="255.0" stylesheets="@dashboardDesign.css">
+                                 <styleClass>
+                                    <String fx:value="shadow" />
+                                    <String fx:value="white-bg" />
+                                 </styleClass>
+                                 <children>
+                                    <Label layoutX="20.0" layoutY="65.0" text="Date:">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField layoutX="86.0" layoutY="61.0" prefHeight="25.0" prefWidth="155.0" styleClass="label-info" stylesheets="@dashboardDesign.css" />
+                                    <TextField layoutX="86.0" layoutY="111.0" prefHeight="25.0" prefWidth="155.0" styleClass="label-info" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="19.0" layoutY="115.0" text="Room:">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="20.0" layoutY="161.0" text="Building:">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="20.0" layoutY="209.0" text="Start:">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="20.0" layoutY="257.0" text="End:">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField layoutX="86.0" layoutY="157.0" prefHeight="25.0" prefWidth="155.0" styleClass="label-info" stylesheets="@dashboardDesign.css" />
+                                    <TextField layoutX="86.0" layoutY="205.0" prefHeight="25.0" prefWidth="155.0" styleClass="label-info" stylesheets="@dashboardDesign.css" />
+                                    <TextField layoutX="86.0" layoutY="253.0" prefHeight="25.0" prefWidth="155.0" styleClass="label-info" stylesheets="@dashboardDesign.css" />
+                                    <Button layoutX="29.0" layoutY="324.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="82.0" styleClass="clear-btn" stylesheets="@dashboardDesign.css" text="Clear" />
+                                    <Button layoutX="134.0" layoutY="324.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="82.0" styleClass="book-btn" stylesheets="@dashboardDesign.css" text="Book" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane layoutX="281.0" layoutY="12.0" prefHeight="532.0" prefWidth="609.0" stylesheets="@dashboardDesign.css">
+                                 <styleClass>
+                                    <String fx:value="shadow" />
+                                    <String fx:value="white-bg" />
+                                 </styleClass>
+                                 <children>
+                                    <TableView fx:id="searchTable" layoutX="10.0" layoutY="85.0" prefHeight="414.0" prefWidth="591.0" stylesheets="@dashboardDesign.css">
+                                      <columns>
+                                        <TableColumn fx:id="searchTable_date" prefWidth="100.0" text="Date" />
+                                        <TableColumn fx:id="searchTable_room" prefWidth="104.0" text="Room Number" />
+                                          <TableColumn fx:id="searchTable_building" prefWidth="118.0" text="Building" />
+                                          <TableColumn fx:id="searchTable_start" prefWidth="84.0" text="Start Time" />
+                                          <TableColumn fx:id="searchTable_end" prefWidth="89.0" text="End Time" />
+                                          <TableColumn fx:id="searchTable_status" prefWidth="95.0" text="Status" />
+                                      </columns>
+                                       <styleClass>
+                                          <String fx:value="table-view" />
+                                          <String fx:value="table-column" />
+                                       </styleClass>
+                                    </TableView>
+                                    <TextField fx:id="search" layoutX="14.0" layoutY="35.0" prefHeight="30.0" prefWidth="270.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font></TextField>
+                                    <FontAwesomeIconView glyphName="SEARCH" layoutX="22.0" layoutY="55.0" size="1.5em" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
+               </center>
             </BorderPane>
          </children>
       </AnchorPane>
