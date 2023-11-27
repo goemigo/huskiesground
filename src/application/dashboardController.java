@@ -25,7 +25,6 @@ public class dashboardController implements Initializable {
 
 	@FXML
     private Button logout;
-
 	
 	@FXML
     private Button bookBtn;

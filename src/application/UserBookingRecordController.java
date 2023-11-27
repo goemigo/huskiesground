@@ -1,6 +1,7 @@
-package view;
+package application;
 
 import java.io.IOException;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
-import model.BookingRecord;
+//import model.BookingRecord;
 
 
 public class UserBookingRecordController {
