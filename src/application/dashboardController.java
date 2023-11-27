@@ -3,6 +3,7 @@ package application;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -15,6 +16,9 @@ public class dashboardController implements Initializable {
 
 	@FXML
     private Button bookBtn;
+	
+    @FXML
+    private Button booking_btn;
 
     @FXML
     private TextField bookBuilding;
@@ -61,6 +65,15 @@ public class dashboardController implements Initializable {
     @FXML
     private TableColumn<?, ?> searchTable_status;
 	
+    public void switchForm(ActionEvent event) {
+		if (event.getSource() == booking_btn) {
+    		searchForm.setVisible(true);
+    		// home_form.setVisible(false);
+    		
+    		booking_btn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3f82ae, #26bf7d);");
+    	}
+    }
+    
     
     public void close() {
     	System.exit(0);
@@ -68,7 +81,7 @@ public class dashboardController implements Initializable {
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
