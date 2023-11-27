@@ -53,7 +53,7 @@
                                     <FontAwesomeIconView fill="WHITE" glyphName="CLIPBOARD" size="1.5em" />
                                  </graphic>
                               </Button>
-                              <Button layoutX="10.0" layoutY="506.0" mnemonicParsing="false" styleClass="logout" stylesheets="@dashboardDesign.css" textFill="WHITE">
+                              <Button fx:id="logout" layoutX="10.0" layoutY="506.0" mnemonicParsing="false" onAction="#logout" styleClass="logout" stylesheets="@dashboardDesign.css" textFill="WHITE">
                                  <graphic>
                                     <FontAwesomeIconView fill="WHITE" glyphName="SIGN_OUT" selectionFill="BLACK" size="2em">
                                        <styleClass>
