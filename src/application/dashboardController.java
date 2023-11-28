@@ -4,6 +4,9 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -92,12 +95,49 @@ public class dashboardController implements Initializable {
     	searchTable_start.setCellValueFactory(new PropertyValueFactory<>("startTime"));
     	searchTable_end.setCellValueFactory(new PropertyValueFactory<>("endTime"));
     	searchTable_status.setCellValueFactory(new PropertyValueFactory<>("status"));
-//        WE NEED TO FIX THE DELETE ON ADD STUDENT FORM 
+
     	searchTable.setItems(roomList);
 
     }
     
-    
+    public void roomSearch() {
+
+        FilteredList<roomData> filter = new FilteredList<>(roomList, e -> true);
+
+        search.textProperty().addListener((Observable, oldValue, newValue) -> {
+
+            filter.setPredicate(predicateRoomData -> {
+
+                if (newValue.isEmpty() || newValue == null) {
+                    return true;
+                }
+                String searchKey = newValue.toLowerCase();
+
+                if (predicateRoomData.getDate().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateRoomData.getRoomNum().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicateRoomData.getBuilding().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicateRoomData.getStartTime().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateRoomData.getEndTime().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateRoomData.getStatus().toString().contains(searchKey)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+
+        SortedList<roomData> sortList = new SortedList<>(filter);
+
+//        sortList.comparatorProperty().bind(studentGrade_tableView.comparatorProperty());
+//        studentGrade_tableView.setItems(sortList);
+
+    }
+
     
     public void logout() {
 
