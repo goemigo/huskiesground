@@ -1,8 +1,13 @@
 package application;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import com.mysql.cj.xdevapi.Statement;
 
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -81,9 +86,44 @@ public class dashboardController implements Initializable {
     @FXML
     private TableColumn<roomData, String> searchTable_status;
 	
+//  DATABASE TOOls
+    private Connection connect;
+    private PreparedStatement prepare;
+    private ResultSet result;
+    
     
     private double x = 0;
     private double y = 0;
+    
+    public ObservableList<roomData> studentGradesListData() {
+
+        ObservableList<roomData> listData = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM allrooms JOIN roomstatus ON allrooms.roomid = roomstatus.roomid WHERE bookable_flag = 1 ORDER BY allrooms.roomid";
+
+        connect = Database.connectDB();
+
+        try {
+        	roomData roomD;
+
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+            	roomD = new roomData(result.getDate("date"),
+                         result.getInt("room_num"),
+                         result.getString("building"),
+                         result.getInt("start_time"),
+                         result.getInt("end_time"),
+                         //result.getDouble("status"));
+
+                listData.add(roomD);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listData;
+    }
     
     private ObservableList<roomData> roomList;
     
