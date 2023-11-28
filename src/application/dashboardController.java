@@ -86,6 +86,7 @@ public class dashboardController implements Initializable {
     private double y = 0;
     
     private ObservableList<roomData> roomList;
+    
     public void roomShowListData() {
     	roomList = roomListData();
 
@@ -201,7 +202,8 @@ public class dashboardController implements Initializable {
     		
     		booking_btn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3f82ae, #26bf7d);");
     		
-    		roomListData();
+    		roomShowListData();
+    		roomSearch();
     	} 
     }
     
