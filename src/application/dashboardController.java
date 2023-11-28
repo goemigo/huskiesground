@@ -17,6 +17,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -57,29 +58,46 @@ public class dashboardController implements Initializable {
     private AnchorPane searchForm;
 
     @FXML
-    private TableView<?> searchTable;
+    private TableView<roomData> searchTable;
 
     @FXML
-    private TableColumn<?, ?> searchTable_building;
+    private TableColumn<roomData, String> searchTable_building;
 
     @FXML
-    private TableColumn<?, ?> searchTable_date;
+    private TableColumn<roomData, String> searchTable_date;
 
     @FXML
-    private TableColumn<?, ?> searchTable_end;
+    private TableColumn<roomData, String> searchTable_end;
 
     @FXML
-    private TableColumn<?, ?> searchTable_room;
+    private TableColumn<roomData, String> searchTable_room;
 
     @FXML
-    private TableColumn<?, ?> searchTable_start;
+    private TableColumn<roomData, String> searchTable_start;
 
     @FXML
-    private TableColumn<?, ?> searchTable_status;
+    private TableColumn<roomData, String> searchTable_status;
 	
     
     private double x = 0;
     private double y = 0;
+    
+    private ObservableList<roomData> roomList;
+    public void roomShowListData() {
+    	roomList = roomListData();
+
+    	searchTable_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+    	searchTable_room.setCellValueFactory(new PropertyValueFactory<>("roomNum"));
+    	searchTable_building.setCellValueFactory(new PropertyValueFactory<>("building"));
+    	searchTable_start.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+    	searchTable_end.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+    	searchTable_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+//        WE NEED TO FIX THE DELETE ON ADD STUDENT FORM 
+    	searchTable.setItems(roomList);
+
+    }
+    
+    
     
     public void logout() {
 
@@ -142,7 +160,9 @@ public class dashboardController implements Initializable {
     		// home_form.setVisible(false);
     		
     		booking_btn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3f82ae, #26bf7d);");
-    	}
+    		
+    		roomListData();
+    	} 
     }
     
     
@@ -152,8 +172,8 @@ public class dashboardController implements Initializable {
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		roomListData();
 
-		
 	}
 
 }
