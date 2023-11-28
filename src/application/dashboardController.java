@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import com.mysql.cj.xdevapi.Statement;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -99,7 +100,7 @@ public class dashboardController implements Initializable {
 
         ObservableList<roomData> listData = FXCollections.observableArrayList();
 
-        String sql = "SELECT * FROM allrooms JOIN roomstatus ON allrooms.roomid = roomstatus.roomid WHERE bookable_flag = 1 ORDER BY allrooms.roomid";
+        String sql = "SELECT * FROM allrooms JOIN roomstatus ON allrooms.roomid = roomstatus.roomid WHERE roomstatus.booked = 0 ORDER BY allrooms.roomid";
 
         connect = Database.connectDB();
 
