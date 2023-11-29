@@ -21,6 +21,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/tianzhichen/Documents/NEU/isb上课学习/23fall/CSYE6200 OOD/mysql-connector-j-8.2.0/mysql-connector-j-8.2.0.jar"/>
+	<classpathentry kind="lib" path="/Users/xingxingxiao/eclipse/mysql-connector-j-8.2.0/mysql-connector-j-8.2.0.jar"/>
+	<classpathentry kind="lib" path="/Users/xingxingxiao/eclipse/fontawesomefx-fontawesome-4.7.0-9.1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

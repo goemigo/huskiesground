@@ -67,6 +67,11 @@
                                     <Font name="Tahoma" size="15.0" />
                                  </font>
                               </Label>
+                              <Button fx:id="booking_btn1" layoutX="16.0" layoutY="278.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="@dashboardDesign.css" text="History" textFill="WHITE">
+                                 <graphic>
+                                    <FontAwesomeIconView fill="WHITE" glyphName="CLIPBOARD" size="1.5em" text="" />
+                                 </graphic>
+                              </Button>
                            </children>
                         </AnchorPane>
                      </children>
