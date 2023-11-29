@@ -14,6 +14,9 @@ import javafx.scene.layout.BorderPane;
 
 
 public class Main extends Application {
+	//accessible to all screens, set the values for these two when successfully logged in
+	public static int currentUserId; 
+	public static String currentUserNAme;
 	
 	public static Connection connection;
 	
@@ -21,7 +24,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws IOException, SQLException {
 		
 		// set up income IO interface
-		Parent root = FXMLLoader.load(getClass().getResource("/view/Welcome.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("Welcome.fxml"));
 		Scene scene = new Scene(root);
 		
 		primaryStage.setTitle("NEU Classroom Searching and Booking App");

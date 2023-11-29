@@ -1,7 +1,9 @@
 package application;
 
 import java.net.URL;
+
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Optional;
@@ -92,15 +94,17 @@ public class dashboardController implements Initializable {
     private PreparedStatement prepare;
     private ResultSet result;
     
+    private roomData roomSelected;
     
     private double x = 0;
     private double y = 0;
     
-    public ObservableList<roomData> studentGradesListData() {
+    public ObservableList<roomData> roomListData() {
 
         ObservableList<roomData> listData = FXCollections.observableArrayList();
 
         String sql = "SELECT * FROM allrooms JOIN roomstatus ON allrooms.roomid = roomstatus.roomid WHERE roomstatus.booked = 0 ORDER BY allrooms.roomid";
+
 
         connect = Database.connectDB();
 
@@ -110,13 +114,20 @@ public class dashboardController implements Initializable {
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
 
-            while (result.next()) {
-            	roomD = new roomData(result.getDate("date"),
-                         result.getInt("room_num"),
-                         result.getString("building"),
-                         result.getInt("start_time"),
-                         result.getInt("end_time"),
-                         //result.getDouble("status"));
+            while (result.next()){
+//            	
+            	Date date = result.getDate("date");
+            	int roomNum = result.getInt("room_num");
+            	String buildingName = result.getString("building");
+            	int start = result.getInt("start_time");
+            	int end = result.getInt("end_time");
+            	String option = result.getString("bookable_flag");
+            	
+            	roomD = new roomData(date,roomNum,buildingName,start,end,option);
+
+                roomD.setRoomid(result.getInt("roomid"));
+                roomD.setBuildingNum(result.getInt("buildingid"));
+                roomD.setRoomStatusId(result.getInt("rsid"));
 
                 listData.add(roomD);
             }
@@ -133,10 +144,10 @@ public class dashboardController implements Initializable {
 
     	searchTable_date.setCellValueFactory(new PropertyValueFactory<>("date"));
     	searchTable_room.setCellValueFactory(new PropertyValueFactory<>("roomNum"));
-    	searchTable_building.setCellValueFactory(new PropertyValueFactory<>("building"));
+    	searchTable_building.setCellValueFactory(new PropertyValueFactory<>("buildingName"));
     	searchTable_start.setCellValueFactory(new PropertyValueFactory<>("startTime"));
     	searchTable_end.setCellValueFactory(new PropertyValueFactory<>("endTime"));
-    	searchTable_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+    	searchTable_status.setCellValueFactory(new PropertyValueFactory<>("option"));
 
     	searchTable.setItems(roomList);
 
@@ -157,15 +168,15 @@ public class dashboardController implements Initializable {
 
                 if (predicateRoomData.getDate().toString().contains(searchKey)) {
                     return true;
-                } else if (predicateRoomData.getRoomNum().toLowerCase().contains(searchKey)) {
+                } else if (String.valueOf(predicateRoomData.getRoomNum()).contains(searchKey)) {
                     return true;
-                } else if (predicateRoomData.getBuilding().toLowerCase().contains(searchKey)) {
+                } else if (predicateRoomData.getBuildingName().toLowerCase().contains(searchKey)) {
                     return true;
-                } else if (predicateRoomData.getStartTime().toString().contains(searchKey)) {
+                } else if (String.valueOf(predicateRoomData.getStartTime()).contains(searchKey)) {
                     return true;
-                } else if (predicateRoomData.getEndTime().toString().contains(searchKey)) {
+                } else if (String.valueOf(predicateRoomData.getEndTime()).contains(searchKey)) {
                     return true;
-                } else if (predicateRoomData.getStatus().toString().contains(searchKey)) {
+                } else if (predicateRoomData.getOption().toLowerCase().contains(searchKey)) {
                     return true;
                 } else {
                     return false;
@@ -258,5 +269,58 @@ public class dashboardController implements Initializable {
 		roomListData();
 
 	}
+	
+	public void selectRoom() {
+        roomSelected = searchTable.getSelectionModel().getSelectedItem();
+        int num = searchTable.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+
+        bookDate.setText(String.valueOf(roomSelected.getDate()));
+        bookRoom.setText(String.valueOf(roomSelected.getRoomNum()));
+        bookBuilding.setText(String.valueOf(roomSelected.getBuildingName()));
+        bookStart.setText(String.valueOf(roomSelected.getStartTime()));
+        bookEnd.setText(String.valueOf(roomSelected.getEndTime()));
+    }
+	
+	public void bookRoom() {
+		roomSelected = searchTable.getSelectionModel().getSelectedItem();
+		
+        int userid = Main.currentUserId; 
+        Date date = Date.valueOf(bookDate.getText());
+        int start = Integer.valueOf(bookStart.getText());
+        int end = Integer.valueOf(bookEnd.getText());
+        
+        int roomid = roomSelected.getRoomid();
+        int roomNum = Integer.valueOf(bookRoom.getText());
+        int buildingNum = roomSelected.getBuildingNum();
+        String buildingName = bookBuilding.getText();
+        String option = roomSelected.getOption(); 
+        
+        try {
+        	if (option == "Book") {
+        		BookableRoom bRoom = new BookableRoom(roomid,roomNum,buildingNum,buildingName,option);
+                bRoom.book(userid,roomid, date,start, end, option);
+
+                roomShowListData();
+                clearFields();
+            } else {
+            	//ViewOnlyRoom vRoom = new ViewOnlyRoom(roomid,roomNum,buildingNum,buildingName,option);
+                //vRoom.book(); 
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+	
+    public void clearFields() {
+    	bookDate.setText("");
+    	bookRoom.setText("");
+    	bookBuilding.setText("");
+    	bookStart.setText("");
+    	bookEnd.setText("");
+    }
 
 }
