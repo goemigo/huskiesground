@@ -1,8 +1,9 @@
 package application;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
-
+import java.sql.SQLException;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
@@ -15,22 +16,41 @@ public class BookableRoom extends Room{
 	}
 
 	@Override
-	public void book(String insertBooking) {
+	public void book(int userid, int roomid, Date date, int start, int end, String status) {
+
 		connect = Database.connectDB();
-        prepare = connect.prepareStatement(insertBooking);
-        
-        //modify database booking status table
-        prepare.setString(1, availableCourse_course.getText());
-        prepare.setString(2, availableCourse_description.getText());
-        prepare.setString(3, availableCourse_degree.getText());
+        try {
+        	String insertBooking = "INSERT INTO bookings (userid,roomid,date,start_time,end_time,booking_status) VALUES(?,?,?,?,?,?)";
+        	
+			prepare = connect.prepareStatement(insertBooking);
+			
+			//insert into bookings table
+	        prepare.setInt(1, userid);
+	        prepare.setInt(2,roomid);
+	        prepare.setDate(3, date);
+	        prepare.setInt(4, start);
+	        prepare.setInt(5, end);
+	        prepare.setString(6, status);
 
-        prepare.executeUpdate();
+	        prepare.executeUpdate();
+	        
+	        //update booked column in roomstatus table
+	        String updateRoomStatus = "UPDATE roomstatus SET booked = 1 WHERE roomid = ?";
+	        
+	        prepare = connect.prepareStatement(updateRoomStatus);
+	        prepare.setInt(1, roomid);
 
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Information Message");
-        alert.setHeaderText(null);
-        alert.setContentText("Successfully Booked!");
-        alert.showAndWait();
+	        prepare.executeUpdate();
+
+	        Alert alert = new Alert(AlertType.INFORMATION);
+	        alert.setTitle("Booking Message");
+	        alert.setHeaderText(null);
+	        alert.setContentText("Successfully Booked!");
+	        alert.showAndWait();
+	        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

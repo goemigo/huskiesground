@@ -1,5 +1,7 @@
 package application;
 
+import java.sql.Date;
+
 public abstract class Room {
 	private int roomId;
 	private int roomNum;
@@ -16,7 +18,7 @@ public abstract class Room {
 		this.bookableFlag = bookableFlag;
 	}
 	
-	public abstract void book();
+	public abstract void book( int userid, int roomid, Date date, int start, int end, String status);
 	// method fired when book button is clicked
 	// for bookable rooms, this method should changed the booked value from 0 to 1 in roomStatus table
 	// for view-only rooms, this method should tell users this is view-only

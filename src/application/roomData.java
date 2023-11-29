@@ -10,6 +10,11 @@ public class roomData {
 	private int endTime;
 	private String option;
 	
+	// attributes that not shown in dashboard table
+	private int roomid;
+	private int buildingNum;
+	private int roomStatusId;
+	
 	public roomData(Date date, int roomNum, String buildingName, int start, int end, String option) {
 		this.setDate(date);
 		this.setRoomNum(roomNum);
@@ -67,6 +72,30 @@ public class roomData {
 		this.option = option;
 	}
 	
+	public int getRoomid() {
+		return roomid;
+	}
+
+	public void setRoomid(int roomid) {
+		this.roomid = roomid;
+	}
+
+	public int getBuildingNum() {
+		return buildingNum;
+	}
+
+	public void setBuildingNum(int buildingNum) {
+		this.buildingNum = buildingNum;
+	}
+
+	public int getRoomStatusId() {
+		return roomStatusId;
+	}
+
+	public void setRoomStatusId(int roomStatusId) {
+		this.roomStatusId = roomStatusId;
+	}
+
 	
 }
 

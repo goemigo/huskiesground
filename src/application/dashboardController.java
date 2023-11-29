@@ -2,6 +2,7 @@ package application;
 
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import java.util.ResourceBundle;
 
 import com.mysql.cj.xdevapi.Statement;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -91,6 +93,7 @@ public class dashboardController implements Initializable {
     private PreparedStatement prepare;
     private ResultSet result;
     
+    private roomData roomSelected;
     
     private double x = 0;
     private double y = 0;
@@ -99,7 +102,7 @@ public class dashboardController implements Initializable {
 
         ObservableList<roomData> listData = FXCollections.observableArrayList();
 
-        String sql = "SELECT * FROM allrooms JOIN roomstatus ON allrooms.roomid = roomstatus.roomid WHERE bookable_flag = 1 ORDER BY allrooms.roomid";
+        String sql = "SELECT * FROM allrooms JOIN roomstatus ON allrooms.roomid = roomstatus.roomid WHERE booked = 0 ORDER BY allrooms.roomid";
 
         connect = Database.connectDB();
 
@@ -109,13 +112,20 @@ public class dashboardController implements Initializable {
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
 
-            while (result.next()) {
-            	roomD = new roomData(result.getDate("date"),
-                         result.getInt("room_num"),
-                         result.getString("building"),
-                         result.getInt("start_time"),
-                         result.getInt("end_time"),
-                         //result.getDouble("status"));
+            while (result.next()){
+//            	
+            	Date date = result.getDate("date");
+            	int roomNum = result.getInt("room_num");
+            	String buildingName = result.getString("building");
+            	int start = result.getInt("start_time");
+            	int end = result.getInt("end_time");
+            	String option = result.getString("bookable_flag");
+            	
+            	roomD = new roomData(date,roomNum,buildingName,start,end,option);
+
+                roomD.setRoomid(result.getInt("roomid"));
+                roomD.setBuildingNum(result.getInt("buildingid"));
+                roomD.setRoomStatusId(result.getInt("rsid"));
 
                 listData.add(roomD);
             }
@@ -258,34 +268,51 @@ public class dashboardController implements Initializable {
 
 	}
 	
+	public void selectRoom() {
+        roomSelected = searchTable.getSelectionModel().getSelectedItem();
+        int num = searchTable.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+
+        bookDate.setText(String.valueOf(roomSelected.getDate()));
+        bookRoom.setText(String.valueOf(roomSelected.getRoomNum()));
+        bookBuilding.setText(String.valueOf(roomSelected.getBuildingName()));
+        bookStart.setText(String.valueOf(roomSelected.getStartTime()));
+        bookEnd.setText(String.valueOf(roomSelected.getEndTime()));
+    }
+	
 	public void bookRoom() {
-
-        String insertBooking = "INSERT INTO course (course,description,degree) VALUES(?,?,?)";
-
-        connect = Database.connectDB();
-//        prepare = connect.prepareStatement(sql);
-//		result = prepare.executeQuery();
-
+		roomSelected = searchTable.getSelectionModel().getSelectedItem();
+		
+        int userid = Main.currentUserId; 
+        Date date = Date.valueOf(bookDate.getText());
+        int start = Integer.valueOf(bookStart.getText());
+        int end = Integer.valueOf(bookEnd.getText());
+        
+        int roomid = roomSelected.getRoomid();
+        int roomNum = Integer.valueOf(bookRoom.getText());
+        int buildingNum = roomSelected.getBuildingNum();
+        String buildingName = bookBuilding.getText();
+        String option = roomSelected.getOption(); 
+        
         try {
-//            Check if the room is view-only or bookable
-                if (status == " ") {
-                	ViewOnlyRoom vRoom = new ViewOnlyRoom(//add params from input);
-                	vRoom.book();
-                } else {
-                	BookableRoom bRoom = new BookableRoom(//add params from input);
-                	bRoom.book(insertBooking);
+        	if (option == "Book") {
+        		BookableRoom bRoom = new BookableRoom(roomid,roomNum,buildingNum,buildingName,option);
+                bRoom.book(userid,roomid, date,start, end, option);
 
-                    roomShowListData();
-                    clearFields();
-
-                }
+                roomShowListData();
+                clearFields();
+            } else {
+            	ViewOnlyRoom vRoom = new ViewOnlyRoom(roomid,roomNum,buildingNum,buildingName,option);
+                vRoom.book(); 
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 	
-	// call this each time book or clear button is clicked
     public void clearFields() {
     	bookDate.setText("");
     	bookRoom.setText("");
