@@ -43,6 +43,9 @@ public class dashboardController implements Initializable {
 	
     @FXML
     private Button booking_btn;
+    
+    @FXML
+    private Button history_btn; //show booking history data
 
     @FXML
     private TextField bookBuilding;
@@ -67,7 +70,8 @@ public class dashboardController implements Initializable {
 
     @FXML
     private AnchorPane searchForm;
-
+    
+    // those on the searchTable
     @FXML
     private TableView<roomData> searchTable;
 
@@ -89,16 +93,42 @@ public class dashboardController implements Initializable {
     @FXML
     private TableColumn<roomData, String> searchTable_status;
 	
+<<<<<<< HEAD
 //  DATABASE TOOls
     private Connection connect;
     private PreparedStatement prepare;
     private ResultSet result;
     
     private roomData roomSelected;
+=======
+    // those on the historyTable
+    @FXML
+    private TableView<?> historyTable;
+
+    @FXML
+    private TableColumn<?, ?> historyTable_building;
+
+    @FXML
+    private TableColumn<?, ?> historyTable_date;
+
+    @FXML
+    private TableColumn<?, ?> historyTable_end;
+
+    @FXML
+    private TableColumn<?, ?> historyTable_room;
+
+    @FXML
+    private TableColumn<?, ?> historyTable_start;
+
+    @FXML
+    private TableColumn<?, ?> historyTable_status;
+    
+>>>>>>> xingxingxiao2
     
     private double x = 0;
     private double y = 0;
     
+<<<<<<< HEAD
     public ObservableList<roomData> roomListData() {
 
         ObservableList<roomData> listData = FXCollections.observableArrayList();
@@ -191,6 +221,22 @@ public class dashboardController implements Initializable {
 
     }
 
+=======
+    
+    
+    public void bookingHistoryRecord() {
+    	
+    	
+    	try {
+    		
+    		
+    	}catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+>>>>>>> xingxingxiao2
     
     public void logout() {
 
@@ -209,7 +255,7 @@ public class dashboardController implements Initializable {
                 logout.getScene().getWindow().hide();
 
                 //LINK YOUR LOGIN FORM 
-                Parent root = FXMLLoader.load(getClass().getResource("/view/Welcome.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("Welcome.fxml"));
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
 
