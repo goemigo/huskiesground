@@ -37,7 +37,7 @@ public class Database {
 		connect = connectDB();
 //		
 		//testing fetch data from the database
-		String sql = "select distinct building from allrooms where bookable_flag=1";
+		String sql = "select distinct building from allrooms where bookable_flag='Book'";
 		
 		prepare = connect.prepareStatement(sql);
 		result = prepare.executeQuery();

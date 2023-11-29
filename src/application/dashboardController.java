@@ -257,5 +257,41 @@ public class dashboardController implements Initializable {
 		roomListData();
 
 	}
+	
+	public void bookRoom() {
+
+        String insertBooking = "INSERT INTO course (course,description,degree) VALUES(?,?,?)";
+
+        connect = Database.connectDB();
+//        prepare = connect.prepareStatement(sql);
+//		result = prepare.executeQuery();
+
+        try {
+//            Check if the room is view-only or bookable
+                if (status == " ") {
+                	ViewOnlyRoom vRoom = new ViewOnlyRoom(//add params from input);
+                	vRoom.book();
+                } else {
+                	BookableRoom bRoom = new BookableRoom(//add params from input);
+                	bRoom.book(insertBooking);
+
+                    roomShowListData();
+                    clearFields();
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+	
+	// call this each time book or clear button is clicked
+    public void clearFields() {
+    	bookDate.setText("");
+    	bookRoom.setText("");
+    	bookBuilding.setText("");
+    	bookStart.setText("");
+    	bookEnd.setText("");
+    }
 
 }
