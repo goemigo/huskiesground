@@ -12,7 +12,7 @@ public class ViewOnlyRoom extends Room{
 	}
 
 	@Override
-	public void book(int userid, int roomid, Date date, int start, int end, String status) {
+	public void book(int userid, int roomid,  int rsid,Date date, int start, int end, String status) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Error Message");
         alert.setHeaderText(null);

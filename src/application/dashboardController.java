@@ -346,30 +346,30 @@ public class dashboardController implements Initializable {
     }
 	
 	@FXML
-	public void bookRoom() {
+	public void bookARoom() {
 		roomSelected = searchTable.getSelectionModel().getSelectedItem();
 		
         int userid = CurrentUser.userid; 
         Date date = Date.valueOf(bookDate.getText());
         int start = Integer.valueOf(bookStart.getText());
         int end = Integer.valueOf(bookEnd.getText());
-        
+        int rsid = roomSelected.getRoomStatusId();
         int roomid = roomSelected.getRoomid();
         int roomNum = Integer.valueOf(bookRoom.getText());
         int buildingNum = roomSelected.getBuildingNum();
         String buildingName = bookBuilding.getText();
         String option = roomSelected.getOption(); 
-        
+
         try {
-        	if (option == "Book") {
+        	if (option.equals("Book")) {
         		BookableRoom bRoom = new BookableRoom(roomid,roomNum,buildingNum,buildingName,option);
-                bRoom.book(userid,roomid, date,start, end, option);
+                bRoom.book(userid,roomid, rsid,date,start, end, option);
 
                 roomShowListData();
                 clearFields();
             } else {
             	ViewOnlyRoom vRoom = new ViewOnlyRoom(roomid,roomNum,buildingNum,buildingName,option);
-                vRoom.book(); 
+                vRoom.book(userid,roomid, rsid, date,start, end, option); 
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -82,7 +82,6 @@ public void login(ActionEvent event){
                 if(result.next()){
                 	CurrentUser.userid = result.getInt("userid");
                 	CurrentUser.username = result.getString("username");
-                    System.out.println(CurrentUser.username);
 
     				Parent root = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
     				Scene scene = new Scene(root);
