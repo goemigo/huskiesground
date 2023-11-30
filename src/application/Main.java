@@ -2,6 +2,7 @@ package application;
 	
 
 import java.io.IOException;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -24,12 +25,15 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws IOException, SQLException {
 		
 		// set up income IO interface
+
 		Parent root = FXMLLoader.load(getClass().getResource("Welcome.fxml"));
 		Scene scene = new Scene(root);
-		
-		primaryStage.setTitle("NEU Classroom Searching and Booking App");
+			
+		primaryStage.setTitle("NEU Classroom Searching and Booking System");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+
+		
 		
 		try {
 			//test database connection

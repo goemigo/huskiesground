@@ -59,7 +59,7 @@ public class WelcomeController {
 		// check user name and password
 		if (username.equals("user1")&& password.equals("pass1")) {
 			try {
-				Parent root = FXMLLoader.load(getClass().getResource("UserBookingRecord.fxml"));
+				Parent root = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
 				Scene scene = new Scene(root);
 				Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 				stage.setScene(scene);
@@ -93,7 +93,7 @@ public class WelcomeController {
 			String password = text_field_welcome_password.getText();
 			if(username.equals("user1")&& password.equals("pass1")) {
 				try {
-					Parent root = FXMLLoader.load(getClass().getResource("UserBookingRecord.fxml"));
+					Parent root = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
 					Scene scene = new Scene(root);
 					Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 					stage.setScene(scene);

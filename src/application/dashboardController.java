@@ -1,6 +1,7 @@
 package application;
 
 import java.net.URL;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -42,6 +43,9 @@ public class dashboardController implements Initializable {
 	
     @FXML
     private Button booking_btn;
+    
+    @FXML
+    private Button history_btn; //show booking history data
 
     @FXML
     private TextField bookBuilding;
@@ -66,7 +70,8 @@ public class dashboardController implements Initializable {
 
     @FXML
     private AnchorPane searchForm;
-
+    
+    // those on the searchTable
     @FXML
     private TableView<roomData> searchTable;
 
@@ -88,21 +93,48 @@ public class dashboardController implements Initializable {
     @FXML
     private TableColumn<roomData, String> searchTable_status;
 	
+
 //  DATABASE TOOls
     private Connection connect;
     private PreparedStatement prepare;
     private ResultSet result;
     
     private roomData roomSelected;
+
+    // those on the historyTable
+    @FXML
+    private TableView<?> historyTable;
+
+    @FXML
+    private TableColumn<?, ?> historyTable_building;
+
+    @FXML
+    private TableColumn<?, ?> historyTable_date;
+
+    @FXML
+    private TableColumn<?, ?> historyTable_end;
+
+    @FXML
+    private TableColumn<?, ?> historyTable_room;
+
+    @FXML
+    private TableColumn<?, ?> historyTable_start;
+
+    @FXML
+    private TableColumn<?, ?> historyTable_status;
+    
+
     
     private double x = 0;
     private double y = 0;
     
-    public ObservableList<roomData> studentGradesListData() {
+
+    public ObservableList<roomData> roomListData() {
 
         ObservableList<roomData> listData = FXCollections.observableArrayList();
 
-        String sql = "SELECT * FROM allrooms JOIN roomstatus ON allrooms.roomid = roomstatus.roomid WHERE booked = 0 ORDER BY allrooms.roomid";
+        String sql = "SELECT * FROM allrooms JOIN roomstatus ON allrooms.roomid = roomstatus.roomid WHERE roomstatus.booked = 0 ORDER BY allrooms.roomid";
+
 
         connect = Database.connectDB();
 
@@ -142,10 +174,10 @@ public class dashboardController implements Initializable {
 
     	searchTable_date.setCellValueFactory(new PropertyValueFactory<>("date"));
     	searchTable_room.setCellValueFactory(new PropertyValueFactory<>("roomNum"));
-    	searchTable_building.setCellValueFactory(new PropertyValueFactory<>("building"));
+    	searchTable_building.setCellValueFactory(new PropertyValueFactory<>("buildingName"));
     	searchTable_start.setCellValueFactory(new PropertyValueFactory<>("startTime"));
     	searchTable_end.setCellValueFactory(new PropertyValueFactory<>("endTime"));
-    	searchTable_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+    	searchTable_status.setCellValueFactory(new PropertyValueFactory<>("option"));
 
     	searchTable.setItems(roomList);
 
@@ -166,15 +198,15 @@ public class dashboardController implements Initializable {
 
                 if (predicateRoomData.getDate().toString().contains(searchKey)) {
                     return true;
-                } else if (predicateRoomData.getRoomNum().toLowerCase().contains(searchKey)) {
+                } else if (String.valueOf(predicateRoomData.getRoomNum()).contains(searchKey)) {
                     return true;
-                } else if (predicateRoomData.getBuilding().toLowerCase().contains(searchKey)) {
+                } else if (predicateRoomData.getBuildingName().toLowerCase().contains(searchKey)) {
                     return true;
-                } else if (predicateRoomData.getStartTime().toString().contains(searchKey)) {
+                } else if (String.valueOf(predicateRoomData.getStartTime()).contains(searchKey)) {
                     return true;
-                } else if (predicateRoomData.getEndTime().toString().contains(searchKey)) {
+                } else if (String.valueOf(predicateRoomData.getEndTime()).contains(searchKey)) {
                     return true;
-                } else if (predicateRoomData.getStatus().toString().contains(searchKey)) {
+                } else if (predicateRoomData.getOption().toLowerCase().contains(searchKey)) {
                     return true;
                 } else {
                     return false;
@@ -188,6 +220,22 @@ public class dashboardController implements Initializable {
 //        studentGrade_tableView.setItems(sortList);
 
     }
+
+
+    
+    
+    public void bookingHistoryRecord() {
+    	
+    	
+    	try {
+    		
+    		
+    	}catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
 
     
     public void logout() {
@@ -207,7 +255,7 @@ public class dashboardController implements Initializable {
                 logout.getScene().getWindow().hide();
 
                 //LINK YOUR LOGIN FORM 
-                Parent root = FXMLLoader.load(getClass().getResource("/view/Welcome.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("Welcome.fxml"));
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
 
@@ -305,8 +353,8 @@ public class dashboardController implements Initializable {
                 roomShowListData();
                 clearFields();
             } else {
-            	ViewOnlyRoom vRoom = new ViewOnlyRoom(roomid,roomNum,buildingNum,buildingName,option);
-                vRoom.book(); 
+            	//ViewOnlyRoom vRoom = new ViewOnlyRoom(roomid,roomNum,buildingNum,buildingName,option);
+                //vRoom.book(); 
             }
         } catch (Exception e) {
             e.printStackTrace();
