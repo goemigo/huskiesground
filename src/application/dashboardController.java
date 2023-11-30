@@ -2,6 +2,7 @@ package application;
 
 import java.net.URL;
 
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -132,13 +133,12 @@ public class dashboardController implements Initializable {
     private double x = 0;
     private double y = 0;
     
-
+    // connect room table with database
     public ObservableList<roomData> roomListData() {
 
         ObservableList<roomData> listData = FXCollections.observableArrayList();
 
         String sql = "SELECT * FROM allrooms JOIN roomstatus ON allrooms.roomid = roomstatus.roomid WHERE roomstatus.booked = 0 ORDER BY allrooms.roomid";
-
 
         connect = Database.connectDB();
 
@@ -171,6 +171,7 @@ public class dashboardController implements Initializable {
         return listData;
     }
     
+    // populate room table
     private ObservableList<roomData> roomList;
     
     public void roomShowListData() {
@@ -187,6 +188,7 @@ public class dashboardController implements Initializable {
 
     }
     
+    // search function
     public void roomSearch() {
 
         FilteredList<roomData> filter = new FilteredList<>(roomList, e -> true);
@@ -198,11 +200,15 @@ public class dashboardController implements Initializable {
                 if (newValue.isEmpty() || newValue == null) {
                     return true;
                 }
+                
                 String searchKey = newValue.toLowerCase();
+                System.out.println("1:" + searchKey);
+                System.out.println("2:" + String.valueOf(predicateRoomData.getRoomNum()));
 
-                if (predicateRoomData.getDate().toString().contains(searchKey)) {
+                if (predicateRoomData.getDate().toString().toLowerCase().contains(searchKey)) {
                     return true;
                 } else if (String.valueOf(predicateRoomData.getRoomNum()).contains(searchKey)) {
+                	System.out.println("3:" + String.valueOf(predicateRoomData.getRoomNum()));
                     return true;
                 } else if (predicateRoomData.getBuildingName().toLowerCase().contains(searchKey)) {
                     return true;
@@ -213,15 +219,16 @@ public class dashboardController implements Initializable {
                 } else if (predicateRoomData.getOption().toLowerCase().contains(searchKey)) {
                     return true;
                 } else {
-                    return false;
+                	System.out.println("4:" + String.valueOf(predicateRoomData.getRoomNum()));
+                    return false;         
                 }
             });
+            SortedList<roomData> sortList = new SortedList<>(filter);
+
+            sortList.comparatorProperty().bind(searchTable.comparatorProperty());
+            searchTable.setItems(sortList);
         });
-
-        SortedList<roomData> sortList = new SortedList<>(filter);
-
-//        sortList.comparatorProperty().bind(studentGrade_tableView.comparatorProperty());
-//        studentGrade_tableView.setItems(sortList);
+     
 
     }
 
