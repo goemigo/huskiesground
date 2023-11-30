@@ -187,47 +187,37 @@ public class dashboardController implements Initializable {
 
     }
     
+    public boolean safeCompare(String value, String searchKey) {
+        return value != null && value.toLowerCase().contains(searchKey);
+    }
+    
     public void roomSearch() {
-
         FilteredList<roomData> filter = new FilteredList<>(roomList, e -> true);
 
         search.textProperty().addListener((Observable, oldValue, newValue) -> {
-
+        	filter.setPredicate(null);
             filter.setPredicate(predicateRoomData -> {
 
                 if (newValue.isEmpty() || newValue == null) {
                     return true;
                 }
                 String searchKey = newValue.toLowerCase();
-
-                if (predicateRoomData.getDate().toString().contains(searchKey)) {
-                    return true;
-                } else if (String.valueOf(predicateRoomData.getRoomNum()).contains(searchKey)) {
-                    return true;
-                } else if (predicateRoomData.getBuildingName().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (String.valueOf(predicateRoomData.getStartTime()).contains(searchKey)) {
-                    return true;
-                } else if (String.valueOf(predicateRoomData.getEndTime()).contains(searchKey)) {
-                    return true;
-                } else if (predicateRoomData.getOption().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                boolean b = safeCompare(String.valueOf(predicateRoomData.getDate()), searchKey)
+                        || safeCompare(String.valueOf(predicateRoomData.getRoomNum()), searchKey)
+                        || safeCompare(predicateRoomData.getBuildingName(), searchKey)
+                        || safeCompare(String.valueOf(predicateRoomData.getStartTime()), searchKey)
+                        || safeCompare(String.valueOf(predicateRoomData.getEndTime()), searchKey)
+                        || safeCompare(predicateRoomData.getOption(), searchKey);
+                return b;
             });
-        });
+            SortedList<roomData> sortList = new SortedList<>(filter);
 
-        SortedList<roomData> sortList = new SortedList<>(filter);
+            sortList.comparatorProperty().bind(searchTable.comparatorProperty());
+            searchTable.setItems(sortList);
 
-//        sortList.comparatorProperty().bind(studentGrade_tableView.comparatorProperty());
-//        studentGrade_tableView.setItems(sortList);
-
+        });   
     }
 
-
-    
-    
     public void bookingHistoryRecord() {
     	
     	
@@ -320,6 +310,7 @@ public class dashboardController implements Initializable {
 		showUsername();
 		
 		roomShowListData();
+//		roomSearch();
 		
 		searchTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
