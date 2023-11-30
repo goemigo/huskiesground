@@ -25,6 +25,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -100,6 +101,9 @@ public class dashboardController implements Initializable {
     private ResultSet result;
     
     private roomData roomSelected;
+    
+    @FXML
+    private Label currentUserName;
 
     // those on the historyTable
     @FXML
@@ -312,10 +316,20 @@ public class dashboardController implements Initializable {
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		roomListData();
+		// show current username on dashboard
+		showUsername();
+		
+		roomShowListData();
+		
+		searchTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                selectRoom();
+            }
+        });
 
 	}
 	
+    //click a row in table, show selected room info on the left side
 	public void selectRoom() {
         roomSelected = searchTable.getSelectionModel().getSelectedItem();
         int num = searchTable.getSelectionModel().getSelectedIndex();
@@ -331,10 +345,11 @@ public class dashboardController implements Initializable {
         bookEnd.setText(String.valueOf(roomSelected.getEndTime()));
     }
 	
+	@FXML
 	public void bookRoom() {
 		roomSelected = searchTable.getSelectionModel().getSelectedItem();
 		
-        int userid = Main.currentUserId; 
+        int userid = CurrentUser.userid; 
         Date date = Date.valueOf(bookDate.getText());
         int start = Integer.valueOf(bookStart.getText());
         int end = Integer.valueOf(bookEnd.getText());
@@ -353,20 +368,25 @@ public class dashboardController implements Initializable {
                 roomShowListData();
                 clearFields();
             } else {
-            	//ViewOnlyRoom vRoom = new ViewOnlyRoom(roomid,roomNum,buildingNum,buildingName,option);
-                //vRoom.book(); 
+            	ViewOnlyRoom vRoom = new ViewOnlyRoom(roomid,roomNum,buildingNum,buildingName,option);
+                vRoom.book(); 
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 	
+	@FXML
     public void clearFields() {
     	bookDate.setText("");
     	bookRoom.setText("");
     	bookBuilding.setText("");
     	bookStart.setText("");
     	bookEnd.setText("");
+    }
+    
+	public void showUsername(){
+		currentUserName.setText(CurrentUser.username);
     }
 
 }
