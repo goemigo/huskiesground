@@ -83,7 +83,7 @@ public void login(ActionEvent event){
                 	CurrentUser.userid = result.getInt("userid");
                 	CurrentUser.username = result.getString("username");
                     System.out.println(CurrentUser.username);
-//                    button_welcome_login.getScene().getWindow().hide();
+
     				Parent root = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
     				Scene scene = new Scene(root);
     				Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -101,39 +101,6 @@ public void login(ActionEvent event){
         }catch(Exception e){e.printStackTrace();}
         
     }
-//	void login(ActionEvent event) {
-//		// input the user name and password
-//		String username = text_field_welcome_username.getText();
-//		String password = text_field_welcome_password.getText();
-//		// check user name and password
-//		if (username.equals("user1")&& password.equals("pass1")) {
-//			try {
-//				Parent root = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
-//				Scene scene = new Scene(root);
-//				Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-//				stage.setScene(scene);
-//				stage.show();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}	
-//		}	else if (username.equals("user2")&& password.equals("pass2")) {
-//			try {
-//				Parent root = FXMLLoader.load(getClass().getResource("userSearch.fxml"));
-//				Scene scene = new Scene(root);
-//				Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-//				stage.setScene(scene);
-//				stage.show();
-//			} catch(IOException e) {
-//				e.printStackTrace();
-//			}
-//		}	else {
-//			Alert alert = new Alert(AlertType.ERROR);
-//			alert.setTitle("Login Failed");
-//			alert.setHeaderText(null);
-//			alert.setContentText("Please enter the correct username and password again!");
-//			alert.showAndWait();
-//		}
-//	}
 	
 	@FXML
 	void handleEnterKey(KeyEvent event) {
