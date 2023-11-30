@@ -30,6 +30,6 @@
          </font>
       </Text>
       <Text layoutX="300.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="NEU Classroom Searching and Booking System" />
-      <Text layoutX="300.0" layoutY="340.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Design by HysichyGroup" />
+      <Text layoutX="300.0" layoutY="340.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Proudly presented by HuskiesGround" />
    </children>
 </AnchorPane>
