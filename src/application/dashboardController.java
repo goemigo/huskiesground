@@ -93,14 +93,14 @@ public class dashboardController implements Initializable {
     @FXML
     private TableColumn<roomData, String> searchTable_status;
 	
-<<<<<<< HEAD
+
 //  DATABASE TOOls
     private Connection connect;
     private PreparedStatement prepare;
     private ResultSet result;
     
     private roomData roomSelected;
-=======
+
     // those on the historyTable
     @FXML
     private TableView<?> historyTable;
@@ -123,12 +123,12 @@ public class dashboardController implements Initializable {
     @FXML
     private TableColumn<?, ?> historyTable_status;
     
->>>>>>> xingxingxiao2
+
     
     private double x = 0;
     private double y = 0;
     
-<<<<<<< HEAD
+
     public ObservableList<roomData> roomListData() {
 
         ObservableList<roomData> listData = FXCollections.observableArrayList();
@@ -221,7 +221,7 @@ public class dashboardController implements Initializable {
 
     }
 
-=======
+
     
     
     public void bookingHistoryRecord() {
@@ -236,7 +236,7 @@ public class dashboardController implements Initializable {
     }
     
     
->>>>>>> xingxingxiao2
+
     
     public void logout() {
 
