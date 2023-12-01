@@ -58,7 +58,7 @@
                                  </font>
                               </Button>
                               <Button fx:id="logout" layoutX="10.0" layoutY="506.0" mnemonicParsing="false" onAction="#logout" styleClass="logout" stylesheets="@dashboardDesign.css" text="Sign Out" textFill="WHITE" />
-                              <Button fx:id="booking_btn1" layoutX="10.0" layoutY="282.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="@dashboardDesign.css" text="History" textFill="WHITE">
+                              <Button fx:id="history_btn" layoutX="10.0" layoutY="232.0" mnemonicParsing="false" onAction="#bookingHistory" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="@dashboardDesign.css" text="History" textFill="WHITE">
                                  <font>
                                     <Font name="Tahoma Bold" size="20.0" />
                                  </font>

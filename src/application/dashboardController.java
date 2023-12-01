@@ -7,6 +7,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Optional;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import com.mysql.cj.xdevapi.Statement;
@@ -106,6 +107,9 @@ public class dashboardController implements Initializable {
     private Label currentUserName;
 
     // those on the historyTable
+//    @FXML
+//    private AnchorPane history_form;
+    
     @FXML
     private TableView<?> historyTable;
 
@@ -126,7 +130,7 @@ public class dashboardController implements Initializable {
 
     @FXML
     private TableColumn<?, ?> historyTable_status;
-    
+
 
     
     private double x = 0;
@@ -218,19 +222,6 @@ public class dashboardController implements Initializable {
         });   
     }
 
-    public void bookingHistoryRecord() {
-    	
-    	
-    	try {
-    		
-    		
-    	}catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    
-
     
     public void logout() {
 
@@ -283,10 +274,21 @@ public class dashboardController implements Initializable {
         }
 
     }
-
+    
+    //History button action
+    public void bookingHistory(ActionEvent event) {
+		if (event.getSource() == history_btn) {
+    		searchForm.setVisible(true);
+    		// home_form.setVisible(false);
+    		
+    		history_btn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3f82ae, #26bf7d);");
+    		
+    		roomShowListData();
+    	} 
+    }
     
     
-    
+    //Booking button action
     public void switchForm(ActionEvent event) {
 		if (event.getSource() == booking_btn) {
     		searchForm.setVisible(true);
@@ -296,7 +298,13 @@ public class dashboardController implements Initializable {
     		
     		roomShowListData();
     		roomSearch();
-    	} 
+		} 
+		// else if(event.getSource() == history_btn) {
+//				searchForm.setVisible(false);
+//    			booking_btn.setVisible(false);
+    		// history_form.setVisible(true);
+    	//}
+		
     }
     
     
