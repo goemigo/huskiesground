@@ -1,6 +1,12 @@
 package application;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Date;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 public class BookingRecord {
 	private Date date;
@@ -8,15 +14,19 @@ public class BookingRecord {
 	private String buildingName;
 	private int startTime;
 	private int endTime;
+	private int rsid;
 	private String bookingStatus;
 	
 	// attributes that not shown in dashboard table
 	private int roomid;
 	private int bookingId;
 	
-	public BookingRecord(Date date, int roomNum, String buildingName, int startTime, int endTime, String bookingStatus) {
+    private PreparedStatement prepare;
+    
+	public BookingRecord(Date date, int rsid, int roomNum, String buildingName, int startTime, int endTime, String bookingStatus) {
 		super();
 		this.date = date;
+		this.rsid = rsid;
 		this.roomNum = roomNum;
 		this.buildingName = buildingName;
 		this.startTime = startTime;
@@ -88,6 +98,38 @@ public class BookingRecord {
 		this.bookingId = bookingId;
 	}
 	
+	public void cancelBooking(Connection connect, int rsid, int bookingid) {
+
+        try {
+	        //update booked column in roomstatus table
+        	String updateRoomStatus = "UPDATE roomstatus SET booked = 0 WHERE rsid = ?";
+	        prepare = connect.prepareStatement(updateRoomStatus);
+	        prepare.setInt(1, rsid);
+	        prepare.executeUpdate();
+	        
+	        String updateBookings = "update bookings set booking_status='Canceled' where bookingid = ? ";
+	        prepare = connect.prepareStatement(updateBookings);
+	        prepare.setInt(1, bookingid);
+	        prepare.executeUpdate();
+
+	        Alert alert = new Alert(AlertType.INFORMATION);
+	        alert.setTitle("Cancel Message");
+	        alert.setHeaderText(null);
+	        alert.setContentText("Successfully Canceled!");
+	        alert.showAndWait();
+	        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int getRsid() {
+		return rsid;
+	}
+
+	public void setRsid(int rsid) {
+		this.rsid = rsid;
+	}
 	
 	
 	

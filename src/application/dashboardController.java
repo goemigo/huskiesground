@@ -206,7 +206,12 @@ public class dashboardController implements Initializable {
 
         ObservableList<BookingRecord> listData = FXCollections.observableArrayList();
 
-        String sql = "SELECT * FROM bookings JOIN allrooms ON allrooms.roomid = bookings.roomid WHERE bookings.userid = ? ORDER BY bookings.bookingid";
+        String sql = 
+        "SELECT bookings.*, allrooms.building, allrooms.room_num, r.rsid  \n"
+        + "FROM bookings \n"
+        + "JOIN allrooms ON allrooms.roomid = bookings.roomid \n"
+        + "JOIN roomstatus r ON r.roomid = bookings.roomid  AND r.start_time = bookings.start_time AND r.end_time = bookings.end_time \n"
+        + "WHERE bookings.userid = ? ORDER BY bookings.bookingid";
         
 
         try {
@@ -219,16 +224,17 @@ public class dashboardController implements Initializable {
             while (result.next()){
 //            	
             	Date date = result.getDate("date");
+            	int rsid = result.getInt("rsid");
             	int roomNum = result.getInt("room_num");
             	String buildingName = result.getString("building");
             	int start = result.getInt("start_time");
             	int end = result.getInt("end_time");
-            	String option = result.getString("booking_status");
+            	String status = result.getString("booking_status");
             	
-            	booking = new BookingRecord(date,roomNum,buildingName,start,end,option);
+            	booking = new BookingRecord(date,rsid,roomNum,buildingName,start,end,status);
 
             	booking.setRoomid(result.getInt("roomid"));
-            	booking.setBookingId(end);
+            	booking.setBookingId(result.getInt("bookingid"));
 
                 listData.add(booking);
             }
@@ -248,7 +254,7 @@ public class dashboardController implements Initializable {
     	historyTable_building.setCellValueFactory(new PropertyValueFactory<>("buildingName"));
     	historyTable_start.setCellValueFactory(new PropertyValueFactory<>("startTime"));
     	historyTable_end.setCellValueFactory(new PropertyValueFactory<>("endTime"));
-    	historyTable_status.setCellValueFactory(new PropertyValueFactory<>("booking_status"));
+    	historyTable_status.setCellValueFactory(new PropertyValueFactory<>("bookingStatus"));
 
     	historyTable.setItems(bookingList);
     }
@@ -327,7 +333,6 @@ public class dashboardController implements Initializable {
      		
     	}
     }
-    
     
     public void close() {
     	System.exit(0);
@@ -418,7 +423,14 @@ public class dashboardController implements Initializable {
 	
 	@FXML
 	public void cancelBooking() {
+		BookingRecord bookingSelected = historyTable.getSelectionModel().getSelectedItem();
 		
+        int rsid = bookingSelected.getRsid();
+        int bid = bookingSelected.getBookingId();
+        
+        bookingSelected.cancelBooking(connect, rsid, bid);
+        showBookingHistoryData();
+        clearFieldsOnHistoryScreen();
 	}
 	
 	@FXML
@@ -432,6 +444,14 @@ public class dashboardController implements Initializable {
     
 	public void showUsername(){
 		currentUserName.setText(CurrentUser.username);
+    }
+	
+	public void clearFieldsOnHistoryScreen() {
+    	bookDate1.setText("");
+    	bookRoom1.setText("");
+    	bookBuilding1.setText("");
+    	bookStart1.setText("");
+    	bookEnd1.setText("");
     }
 
 }
