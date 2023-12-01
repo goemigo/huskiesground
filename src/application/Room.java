@@ -18,10 +18,7 @@ public abstract class Room {
 		this.bookableFlag = bookableFlag;
 	}
 	
-	//public abstract void book( int userid, int roomid, Date date, int start, int end, String status);
-	// method fired when book button is clicked
-	// for bookable rooms, this method should changed the booked value from 0 to 1 in roomStatus table
-	// for view-only rooms, this method should tell users this is view-only
+	public abstract void book(int userid, int roomid, int rsid, Date date, int start, int end, String status);
 
 	public int getRoomId() {
 		return roomId;

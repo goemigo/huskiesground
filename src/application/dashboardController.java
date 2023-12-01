@@ -102,6 +102,9 @@ public class dashboardController implements Initializable {
     private ResultSet result;
     
     private roomData roomSelected;
+    
+    @FXML
+    private Label currentUserName;
 
     // those on the historyTable
 //    @FXML
@@ -188,48 +191,36 @@ public class dashboardController implements Initializable {
 
     }
     
+    public boolean safeCompare(String value, String searchKey) {
+        return value != null && value.toLowerCase().contains(searchKey);
+    }
+    
     public void roomSearch() {
-
         FilteredList<roomData> filter = new FilteredList<>(roomList, e -> true);
 
         search.textProperty().addListener((Observable, oldValue, newValue) -> {
-
+        	filter.setPredicate(null);
             filter.setPredicate(predicateRoomData -> {
 
                 if (newValue.isEmpty() || newValue == null) {
                     return true;
                 }
                 String searchKey = newValue.toLowerCase();
-
-                if (predicateRoomData.getDate().toString().contains(searchKey)) {
-                    return true;
-                } else if (String.valueOf(predicateRoomData.getRoomNum()).contains(searchKey)) {
-                    return true;
-                } else if (predicateRoomData.getBuildingName().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (String.valueOf(predicateRoomData.getStartTime()).contains(searchKey)) {
-                    return true;
-                } else if (String.valueOf(predicateRoomData.getEndTime()).contains(searchKey)) {
-                    return true;
-                } else if (predicateRoomData.getOption().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                boolean b = safeCompare(String.valueOf(predicateRoomData.getDate()), searchKey)
+                        || safeCompare(String.valueOf(predicateRoomData.getRoomNum()), searchKey)
+                        || safeCompare(predicateRoomData.getBuildingName(), searchKey)
+                        || safeCompare(String.valueOf(predicateRoomData.getStartTime()), searchKey)
+                        || safeCompare(String.valueOf(predicateRoomData.getEndTime()), searchKey)
+                        || safeCompare(predicateRoomData.getOption(), searchKey);
+                return b;
             });
-        });
+            SortedList<roomData> sortList = new SortedList<>(filter);
 
-        SortedList<roomData> sortList = new SortedList<>(filter);
+            sortList.comparatorProperty().bind(searchTable.comparatorProperty());
+            searchTable.setItems(sortList);
 
-//        sortList.comparatorProperty().bind(studentGrade_tableView.comparatorProperty());
-//        studentGrade_tableView.setItems(sortList);
-
+        });   
     }
-
-
-    
-   
-
 
     
     public void logout() {
@@ -323,10 +314,21 @@ public class dashboardController implements Initializable {
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		roomListData();
+		// show current username on dashboard
+		showUsername();
+		
+		roomShowListData();
+//		roomSearch();
+		
+		searchTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                selectRoom();
+            }
+        });
 
 	}
 	
+    //click a row in table, show selected room info on the left side
 	public void selectRoom() {
         roomSelected = searchTable.getSelectionModel().getSelectedItem();
         int num = searchTable.getSelectionModel().getSelectedIndex();
@@ -342,42 +344,48 @@ public class dashboardController implements Initializable {
         bookEnd.setText(String.valueOf(roomSelected.getEndTime()));
     }
 	
-	public void bookRoom() {
+	@FXML
+	public void bookARoom() {
 		roomSelected = searchTable.getSelectionModel().getSelectedItem();
 		
-        int userid = Main.currentUserId; 
+        int userid = CurrentUser.userid; 
         Date date = Date.valueOf(bookDate.getText());
         int start = Integer.valueOf(bookStart.getText());
         int end = Integer.valueOf(bookEnd.getText());
-        
+        int rsid = roomSelected.getRoomStatusId();
         int roomid = roomSelected.getRoomid();
         int roomNum = Integer.valueOf(bookRoom.getText());
         int buildingNum = roomSelected.getBuildingNum();
         String buildingName = bookBuilding.getText();
         String option = roomSelected.getOption(); 
-        
+
         try {
-        	if (option == "Book") {
+        	if (option.equals("Book")) {
         		BookableRoom bRoom = new BookableRoom(roomid,roomNum,buildingNum,buildingName,option);
-                bRoom.book(userid,roomid, date,start, end, option);
+                bRoom.book(userid,roomid, rsid,date,start, end, option);
 
                 roomShowListData();
                 clearFields();
             } else {
-            	//ViewOnlyRoom vRoom = new ViewOnlyRoom(roomid,roomNum,buildingNum,buildingName,option);
-                //vRoom.book(); 
+            	ViewOnlyRoom vRoom = new ViewOnlyRoom(roomid,roomNum,buildingNum,buildingName,option);
+                vRoom.book(userid,roomid, rsid, date,start, end, option); 
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 	
+	@FXML
     public void clearFields() {
     	bookDate.setText("");
     	bookRoom.setText("");
     	bookBuilding.setText("");
     	bookStart.setText("");
     	bookEnd.setText("");
+    }
+    
+	public void showUsername(){
+		currentUserName.setText(CurrentUser.username);
     }
 
 }

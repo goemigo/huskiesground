@@ -16,8 +16,6 @@ import javafx.scene.layout.BorderPane;
 
 public class Main extends Application {
 	//accessible to all screens, set the values for these two when successfully logged in
-	public static int currentUserId; 
-	public static String currentUserNAme;
 	
 	public static Connection connection;
 	
@@ -38,7 +36,7 @@ public class Main extends Application {
 		try {
 			//test database connection
 			Database db = new Database();
-			db.getData();
+//			db.getData();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
