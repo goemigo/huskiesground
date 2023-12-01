@@ -94,10 +94,9 @@ public class dashboardController implements Initializable {
 
     @FXML
     private TableColumn<roomData, String> searchTable_status;
-	
-
+    
 //  DATABASE TOOls
-    private Connection connect;
+    private Connection connect = Database.connectDB();;
     private PreparedStatement prepare;
     private ResultSet result;
     
@@ -107,32 +106,48 @@ public class dashboardController implements Initializable {
     private Label currentUserName;
 
     // those on the historyTable
-//    @FXML
-//    private AnchorPane history_form;
+    @FXML
+    private AnchorPane history_form;
     
     @FXML
-    private TableView<?> historyTable;
+    private TableView<BookingRecord> historyTable;
 
     @FXML
-    private TableColumn<?, ?> historyTable_building;
+    private TableColumn<BookingRecord, String> historyTable_building;
 
     @FXML
-    private TableColumn<?, ?> historyTable_date;
+    private TableColumn<BookingRecord, String> historyTable_date;
 
     @FXML
-    private TableColumn<?, ?> historyTable_end;
+    private TableColumn<BookingRecord, String> historyTable_end;
 
     @FXML
-    private TableColumn<?, ?> historyTable_room;
+    private TableColumn<BookingRecord, String> historyTable_room;
 
     @FXML
-    private TableColumn<?, ?> historyTable_start;
+    private TableColumn<BookingRecord, String> historyTable_start;
 
     @FXML
-    private TableColumn<?, ?> historyTable_status;
+    private TableColumn<BookingRecord, String> historyTable_status;
 
-
+    @FXML
+    private TextField bookDate1;
     
+    @FXML
+    private TextField bookRoom1;
+    
+    @FXML
+    private TextField bookBuilding1;
+
+    @FXML
+    private TextField bookStart1;
+    
+    @FXML
+    private TextField bookEnd1;
+    
+    @FXML
+    private Button cancelBtn; 
+
     private double x = 0;
     private double y = 0;
     
@@ -142,9 +157,6 @@ public class dashboardController implements Initializable {
         ObservableList<roomData> listData = FXCollections.observableArrayList();
 
         String sql = "SELECT * FROM allrooms JOIN roomstatus ON allrooms.roomid = roomstatus.roomid WHERE roomstatus.booked = 0 ORDER BY allrooms.roomid";
-
-
-        connect = Database.connectDB();
 
         try {
         	roomData roomD;
@@ -188,7 +200,57 @@ public class dashboardController implements Initializable {
     	searchTable_status.setCellValueFactory(new PropertyValueFactory<>("option"));
 
     	searchTable.setItems(roomList);
+    }
+    
+    public ObservableList<BookingRecord> bookingHistoryData() {
 
+        ObservableList<BookingRecord> listData = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM bookings JOIN allrooms ON allrooms.roomid = bookings.roomid WHERE bookings.userid = ? ORDER BY bookings.bookingid";
+        
+
+        try {
+        	BookingRecord booking;
+        	
+        	prepare = connect.prepareStatement(sql);
+            prepare.setInt(1, CurrentUser.userid);
+            result = prepare.executeQuery();
+
+            while (result.next()){
+//            	
+            	Date date = result.getDate("date");
+            	int roomNum = result.getInt("room_num");
+            	String buildingName = result.getString("building");
+            	int start = result.getInt("start_time");
+            	int end = result.getInt("end_time");
+            	String option = result.getString("booking_status");
+            	
+            	booking = new BookingRecord(date,roomNum,buildingName,start,end,option);
+
+            	booking.setRoomid(result.getInt("roomid"));
+            	booking.setBookingId(end);
+
+                listData.add(booking);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listData;
+    }
+    
+    private ObservableList<BookingRecord> bookingList;
+    
+    public void showBookingHistoryData() {
+    	bookingList = bookingHistoryData();
+
+    	historyTable_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+    	historyTable_room.setCellValueFactory(new PropertyValueFactory<>("roomNum"));
+    	historyTable_building.setCellValueFactory(new PropertyValueFactory<>("buildingName"));
+    	historyTable_start.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+    	historyTable_end.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+    	historyTable_status.setCellValueFactory(new PropertyValueFactory<>("booking_status"));
+
+    	historyTable.setItems(bookingList);
     }
     
     public boolean safeCompare(String value, String searchKey) {
@@ -224,87 +286,46 @@ public class dashboardController implements Initializable {
 
     
     public void logout() {
-
         try {
-
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation Message");
-            alert.setHeaderText(null);
-            alert.setContentText("Are you sure you want to logout?");
-
-            Optional<ButtonType> option = alert.showAndWait();
-
-            if (option.get().equals(ButtonType.OK)) {
-
-                //HIDE YOUR DASHBOARD FORM
                 logout.getScene().getWindow().hide();
 
-                //LINK YOUR LOGIN FORM 
+                //back to login form 
                 Parent root = FXMLLoader.load(getClass().getResource("Welcome.fxml"));
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
-
-//                root.setOnMousePressed((MouseEvent event) -> {
-//                    x = event.getSceneX();
-//                    y = event.getSceneY();
-//                });
-//
-//                root.setOnMouseDragged((MouseEvent event) -> {
-//                    stage.setX(event.getScreenX() - x);
-//                    stage.setY(event.getScreenY() - y);
-//
-//                    stage.setOpacity(.8);
-//                });
-//
-//                root.setOnMouseReleased((MouseEvent event) -> {
-//                    stage.setOpacity(1);
-//                });
 
                 stage.initStyle(StageStyle.TRANSPARENT);
 
                 stage.setScene(scene);
                 stage.show();
-
-            } else {
-                return;
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-    
-    //History button action
-    public void bookingHistory(ActionEvent event) {
-		if (event.getSource() == history_btn) {
-    		searchForm.setVisible(true);
-    		// home_form.setVisible(false);
-    		
-    		history_btn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3f82ae, #26bf7d);");
-    		
-    		roomShowListData();
-    	} 
-    }
-    
-    
-    //Booking button action
+   
+    //switch between booking screen and history screen
     public void switchForm(ActionEvent event) {
 		if (event.getSource() == booking_btn) {
+			history_form.setVisible(false);
     		searchForm.setVisible(true);
-    		// home_form.setVisible(false);
-    		
+
     		booking_btn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3f82ae, #26bf7d);");
+    		history_btn.setStyle(null);
     		
     		roomShowListData();
-    		roomSearch();
+
 		} 
-		// else if(event.getSource() == history_btn) {
-//				searchForm.setVisible(false);
-//    			booking_btn.setVisible(false);
-    		// history_form.setVisible(true);
-    	//}
-		
+		 else if(event.getSource() == history_btn) {
+			 searchForm.setVisible(false);
+    		 history_form.setVisible(true);
+    		 
+    		 history_btn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3f82ae, #26bf7d);");
+    		 booking_btn.setStyle(null);
+    		 
+    		 showBookingHistoryData();
+     		
+    	}
     }
     
     
@@ -316,13 +337,18 @@ public class dashboardController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// show current username on dashboard
 		showUsername();
-		
+		history_form.setVisible(false);
 		roomShowListData();
-//		roomSearch();
 		
 		searchTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 selectRoom();
+            }
+        });
+		
+		historyTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                selectBooking();
             }
         });
 
@@ -342,6 +368,21 @@ public class dashboardController implements Initializable {
         bookBuilding.setText(String.valueOf(roomSelected.getBuildingName()));
         bookStart.setText(String.valueOf(roomSelected.getStartTime()));
         bookEnd.setText(String.valueOf(roomSelected.getEndTime()));
+    }
+	
+	public void selectBooking() {
+        BookingRecord bookingSelected = historyTable.getSelectionModel().getSelectedItem();
+        int num = historyTable.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+
+        bookDate1.setText(String.valueOf(bookingSelected.getDate()));
+        bookRoom1.setText(String.valueOf(bookingSelected.getRoomNum()));
+        bookBuilding1.setText(String.valueOf(bookingSelected.getBuildingName()));
+        bookStart1.setText(String.valueOf(bookingSelected.getStartTime()));
+        bookEnd1.setText(String.valueOf(bookingSelected.getEndTime()));
     }
 	
 	@FXML
@@ -374,6 +415,11 @@ public class dashboardController implements Initializable {
             e.printStackTrace();
         }
     }
+	
+	@FXML
+	public void cancelBooking() {
+		
+	}
 	
 	@FXML
     public void clearFields() {
