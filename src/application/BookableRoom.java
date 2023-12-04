@@ -16,7 +16,7 @@ public class BookableRoom extends Room{
 	}
 
 	@Override
-	public void book(int userid, int roomid, Date date, int start, int end, String status) {
+	public void book(int userid, int roomid, int rsid, Date date, int start, int end, String status) {
 
 		connect = Database.connectDB();
         try {
@@ -30,15 +30,15 @@ public class BookableRoom extends Room{
 	        prepare.setDate(3, date);
 	        prepare.setInt(4, start);
 	        prepare.setInt(5, end);
-	        prepare.setString(6, status);
+	        prepare.setString(6, "Booked");
 
 	        prepare.executeUpdate();
 	        
 	        //update booked column in roomstatus table
-	        String updateRoomStatus = "UPDATE roomstatus SET booked = 1 WHERE roomid = ?";
+	        String updateRoomStatus = "UPDATE roomstatus SET booked = 1 WHERE rsid = ?";
 	        
 	        prepare = connect.prepareStatement(updateRoomStatus);
-	        prepare.setInt(1, roomid);
+	        prepare.setInt(1, rsid);
 
 	        prepare.executeUpdate();
 

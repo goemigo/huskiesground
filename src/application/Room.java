@@ -18,7 +18,7 @@ public abstract class Room {
 		this.bookableFlag = bookableFlag;
 	}
 	
-	public abstract void book(int userid, int roomid, Date date, int start, int end, String status);
+	public abstract void book(int userid, int roomid, int rsid, Date date, int start, int end, String status);
 
 	public int getRoomId() {
 		return roomId;
