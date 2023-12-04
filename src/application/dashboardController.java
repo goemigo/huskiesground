@@ -2,6 +2,7 @@ package application;
 
 import java.net.URL;
 
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -151,7 +152,7 @@ public class dashboardController implements Initializable {
     private double x = 0;
     private double y = 0;
     
-
+    // connect room table with database
     public ObservableList<roomData> roomListData() {
 
         ObservableList<roomData> listData = FXCollections.observableArrayList();
@@ -187,6 +188,7 @@ public class dashboardController implements Initializable {
         return listData;
     }
     
+    // populate room table
     private ObservableList<roomData> roomList;
     
     public void roomShowListData() {
@@ -273,6 +275,7 @@ public class dashboardController implements Initializable {
                 if (newValue.isEmpty() || newValue == null) {
                     return true;
                 }
+                
                 String searchKey = newValue.toLowerCase();
                 boolean b = safeCompare(String.valueOf(predicateRoomData.getDate()), searchKey)
                         || safeCompare(String.valueOf(predicateRoomData.getRoomNum()), searchKey)
