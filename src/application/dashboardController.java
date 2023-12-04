@@ -1,7 +1,7 @@
 package application;
 
-import java.net.URL;
 
+import java.net.URL;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
-
+import javafx.scene.input.MouseEvent;
 import com.mysql.cj.xdevapi.Statement;
 
 import javafx.collections.FXCollections;
@@ -295,18 +295,52 @@ public class dashboardController implements Initializable {
 
     
     public void logout() {
+
         try {
+
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure you want to logout?");
+
+            Optional<ButtonType> option = alert.showAndWait();
+
+            if (option.get().equals(ButtonType.OK)) {
+
+                //HIDE YOUR DASHBOARD FORM
                 logout.getScene().getWindow().hide();
 
-                //back to login form 
+                //LINK YOUR LOGIN FORM 
                 Parent root = FXMLLoader.load(getClass().getResource("Welcome.fxml"));
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
 
+                root.setOnMousePressed((MouseEvent event) -> {
+                    x = event.getSceneX();
+                    y = event.getSceneY();
+                });
+
+                root.setOnMouseDragged((MouseEvent event) -> {
+                    stage.setX(event.getScreenX() - x);
+                    stage.setY(event.getScreenY() - y);
+
+                    stage.setOpacity(.8);
+                });
+
+                root.setOnMouseReleased((MouseEvent event) -> {
+                    stage.setOpacity(1);
+                });
+
+                
                 stage.initStyle(StageStyle.TRANSPARENT);
 
                 stage.setScene(scene);
                 stage.show();
+
+            } else {
+                return;
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
