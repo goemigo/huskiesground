@@ -2,6 +2,7 @@ package application;
 
 import java.io.IOException;
 
+
 /**
  * Sample Skeleton for 'Welcome.fxml' Controller Class
  */
@@ -12,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
+import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -21,8 +23,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class WelcomeController {
 
@@ -55,6 +60,10 @@ public class WelcomeController {
 	}
 	
 	@FXML
+	
+    private double x= 0 ;
+    private double y= 0;
+	
 public void login(ActionEvent event){
         
         String sql = "SELECT * FROM users WHERE username = ? and password = ?";
@@ -82,10 +91,28 @@ public void login(ActionEvent event){
                 if(result.next()){
                 	CurrentUser.userid = result.getInt("userid");
                 	CurrentUser.username = result.getString("username");
-
+                
+                    // TO HIDE THE LOGIN FORM
+                	button_welcome_login.getScene().getWindow().hide();
+                	
+                	// link to dashboard
     				Parent root = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
+    				
+    				Stage stage = new Stage();
     				Scene scene = new Scene(root);
-    				Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+                    root.setOnMousePressed((MouseEvent event1) ->{
+                        x = event1.getSceneX();
+                        y = event1.getSceneY();
+                    });
+                    
+                    root.setOnMouseDragged((MouseEvent event2) ->{
+                        stage.setX(event2.getScreenX() - x);
+                        stage.setY(event2.getScreenY() - y);
+                    });
+    				
+                    stage.initStyle(StageStyle.TRANSPARENT);
+                    
     				stage.setScene(scene);
     				stage.show();
                     
