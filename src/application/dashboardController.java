@@ -316,7 +316,10 @@ public class dashboardController implements Initializable {
 			history_form.setVisible(false);
     		searchForm.setVisible(true);
 
-    		booking_btn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3f82ae, #26bf7d);");
+    		booking_btn.setStyle("-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.8), 5, 0.0, 0, 2);" +
+    				"-fx-underline: true; " +
+                    "-fx-underline-color: white;");
+
     		history_btn.setStyle(null);
     		
     		roomShowListData();
@@ -326,7 +329,10 @@ public class dashboardController implements Initializable {
 			 searchForm.setVisible(false);
     		 history_form.setVisible(true);
     		 
-    		 history_btn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3f82ae, #26bf7d);");
+    		 history_btn.setStyle("-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.8), 5, 0.0, 0, 2);" +
+     				"-fx-underline: true; " +
+                     "-fx-underline-color: white;");
+
     		 booking_btn.setStyle(null);
     		 
     		 showBookingHistoryData();
